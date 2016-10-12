@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
-import {PeopleService} from '../../providers/people-service';
+import { StorageProvider } from '../../providers/storage-provider';
 
 @Component({
   selector: 'page-contact',
   templateUrl: 'contact.html',
-  providers: [PeopleService]
+  providers: [StorageProvider]
 })
 export class ContactPage {
   public people: any;
 
-  constructor(public navCtrl: NavController, public peopleService: PeopleService) {
+  constructor(public navCtrl: NavController, public storage: StorageProvider) {
     this.loadPeople();
   }
 
   loadPeople(){
-    this.peopleService.load().then(data => {
-      this.people = data;
+    this.storage.getEmployees().then(data => {
+      this.people = data; 
     });
   }
 }

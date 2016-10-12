@@ -4,18 +4,28 @@ import { StatusBar } from 'ionic-native';
 
 import { TabsPage } from '../pages/tabs/tabs';
 
+import { StorageProvider } from '../providers/storage-provider';
+import { PeopleService } from '../providers/people-service';
 
 @Component({
-  template: `<ion-nav [root]="rootPage"></ion-nav>`
+  template: `<ion-nav [root]="rootPage"></ion-nav>`,
+  providers: [StorageProvider, PeopleService]
 })
 export class MyApp {
 rootPage: any;
 
-  constructor(platform: Platform, renderer: Renderer) {
+  constructor(platform: Platform, renderer: Renderer, private storage: StorageProvider, private peopleService: PeopleService) {
     renderer.listenGlobal('document', 'mfpjsloaded', () => {
       console.log('--> MFP API init complete');
 
       this.MFPInitComplete();
+    })
+
+    renderer.listenGlobal('document', 'mfpjsonjsloaded', () => {
+      console.log('--> MFP JSONStore API init complete');
+
+      this.storage.init();
+      this.peopleService.load();
     })
 
     platform.ready().then(() => {
