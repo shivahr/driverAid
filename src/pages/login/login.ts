@@ -21,8 +21,8 @@ export class Login {
     this.AuthInit();
 
     this.form = new FormGroup({
-      firstName: new FormControl("", Validators.required),
-      lastName: new FormControl("", Validators.required)
+      username: new FormControl("", Validators.required),
+      password: new FormControl("", Validators.required)
     });
   }
 
@@ -53,9 +53,9 @@ export class Login {
         console.log('--> handleFailure called' + error.failure);
         this.isChallenged = false;
         if (error.failure !== null){
-            alert(error.failure);
+            this.showAlert(error.failure);
         } else {
-            alert("Failed to login.");
+            this.showAlert("Failed to login.");
         }
     };
   }
@@ -65,7 +65,7 @@ export class Login {
     let username = this.form.value.username;
     let password = this.form.value.password;
     if (username === "" || password === "") {
-        alert('Username and password are required');
+        this.showAlert('Username and password are required');
         return;
     }
 
@@ -84,10 +84,6 @@ export class Login {
 
   }
 
-  ionViewDidLoad() {
-    console.log('Hello Login Page');
-  }
-
   // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
   showLoginPage() {
     this.navCtrl.setRoot(Login);
@@ -95,6 +91,23 @@ export class Login {
 
   showTabsPage() {
     this.navCtrl.setRoot(TabsPage);
+  }
+
+  showAlert(alertMessage) {
+    let prompt = this.alertCtrl.create({
+      title: 'Login Failure',
+      message: alertMessage,
+      buttons: [
+        {
+          text: 'Ok',
+        }
+      ]
+    });
+    prompt.present();
+  }
+
+  ionViewDidLoad() {
+    console.log('Hello Login Page');
   }
 
 }
