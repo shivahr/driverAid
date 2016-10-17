@@ -17,9 +17,9 @@ export class StorageProvider {
     }
 
     WL.JSONStore.init(collections).then((success) => {
-      console.log('-->JSONStore init success')
+      console.log('--> JSONStore init success')
     }, (failure) => {
-      console.log('-->JSONStore init failed', failure)
+      console.log('--> JSONStore init failed', failure)
     })
   }
 
@@ -47,10 +47,10 @@ export class StorageProvider {
       let options = {};
 
       WL.JSONStore.get(collectionName).findAll(options).then((success) => {
-        console.log('-->JSONStore getEmployees success', success)
+        console.log('--> JSONStore getEmployees success', success)
         resolve(success);
       }, (failure) => {
-        console.log('-->JSONStore getEmployees failed', failure)
+        console.log('--> JSONStore getEmployees failed', failure)
         resolve('error');
       })
     })
