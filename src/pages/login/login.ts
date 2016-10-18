@@ -4,6 +4,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TabsPage } from '../tabs/tabs';
 
 var navController: any;
+var alertController: any;
+var isChallenged = false;
+var statusMsg;
 
 @Component({
   selector: 'page-login',
@@ -11,14 +14,14 @@ var navController: any;
 })
 export class Login {
   form;
-  isChallenged = false;
   securityCheckName = 'LDAPLogin';
   userLoginChallengeHandler;
-  statusMsg;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
-    this.AuthInit();
     navController = navCtrl;
+    alertController = alertCtrl;
+
+    this.AuthInit();
 
     this.form = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -32,25 +35,20 @@ export class Login {
 
     this.userLoginChallengeHandler.handleChallenge = function(challenge) {
         console.log('--> handleChallenge called');
-        this.isChallenged = true;
-        this.statusMsg = "Remaining Attempts: " + challenge.remainingAttempts;
+        isChallenged = true;
+        statusMsg = "Remaining Attempts: " + challenge.remainingAttempts;
         if (challenge.errorMsg !== null){
-            this.statusMsg += "<br/>" + challenge.errorMsg;
+            statusMsg += "<br/>" + challenge.errorMsg;
         }
 
-        // this.showLoginPage();
         // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
         navController.setRoot(Login);
     };
 
     this.userLoginChallengeHandler.handleSuccess = function(data) {
         console.log('--> handleSuccess called');
-        this.isChallenged = false;
-        // document.getElementById('username').value = "";
-        // document.getElementById('password').value = "";
-        // document.getElementById("helloUser").innerHTML = "Hello, " + data.user.displayName;
+        isChallenged = false;
 
-        // this.showTabsPage();
         console.log('--> this: ', this);
         console.log('--> navController:', navController);
         // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
@@ -59,11 +57,11 @@ export class Login {
 
     this.userLoginChallengeHandler.handleFailure = function(error) {
         console.log('--> handleFailure called' + error.failure);
-        this.isChallenged = false;
+        isChallenged = false;
         if (error.failure !== null){
-            this.showAlert(error.failure);
+            showAlert(error.failure);
         } else {
-            this.showAlert("Failed to login.");
+            showAlert("Failed to login.");
         }
     };
   }
@@ -73,14 +71,14 @@ export class Login {
     let username = this.form.value.username;
     let password = this.form.value.password;
     if (username === "" || password === "") {
-        this.showAlert('Username and password are required');
+        showAlert('Username and password are required');
         return;
     }
     console.log('--> Sign-in with user: ', username);
-    console.log('--> isChallenged: ', this.isChallenged);
+    console.log('--> isChallenged: ', isChallenged);
 
     // Reference: https://github.com/MobileFirst-Platform-Developer-Center/PreemptiveLoginCordova/blob/release80/www/js/UserLoginChallengeHandler.js
-    if (this.isChallenged){
+    if (isChallenged){
         this.userLoginChallengeHandler.submitChallengeAnswer({'username':username, 'password':password});
     } else {
         WLAuthorizationManager.login(this.securityCheckName,{'username':username, 'password':password})
@@ -94,21 +92,21 @@ export class Login {
 
   }
 
-  showAlert(alertMessage) {
-    let prompt = this.alertCtrl.create({
-      title: 'Login Failure',
-      message: alertMessage,
-      buttons: [
-        {
-          text: 'Ok',
-        }
-      ]
-    });
-    prompt.present();
-  }
-
   ionViewDidLoad() {
     console.log('--> Login Page - ionViewDidLoad called');
   }
 
+}
+
+function showAlert(alertMessage) {
+  let prompt = alertController.create({
+    title: 'Login Failure',
+    message: alertMessage,
+    buttons: [
+      {
+        text: 'Ok',
+      }
+    ]
+  });
+  prompt.present();
 }
