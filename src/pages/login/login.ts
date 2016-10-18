@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-
 import { NavController, AlertController } from 'ionic-angular';
-
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
 import { TabsPage } from '../tabs/tabs';
 
 @Component({
@@ -16,9 +13,11 @@ export class Login {
   securityCheckName = 'LDAPLogin';
   userLoginChallengeHandler;
   statusMsg;
+  navController: any;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
     this.AuthInit();
+    this.navController = navCtrl;
 
     this.form = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -68,6 +67,8 @@ export class Login {
         this.showAlert('Username and password are required');
         return;
     }
+    console.log('--> Sign-in with user: ', username);
+    console.log('--> isChallenged: ', this.isChallenged);
 
     // Reference: https://github.com/MobileFirst-Platform-Developer-Center/PreemptiveLoginCordova/blob/release80/www/js/UserLoginChallengeHandler.js
     if (this.isChallenged){
@@ -77,7 +78,7 @@ export class Login {
         .then((success) => {
             console.log('--> login success');
           }, (failure) => {
-            console.log('--> login onFailure: ' + JSON.stringify(failure));
+            console.log('--> login failure: ' + JSON.stringify(failure));
           }
         );
     }
@@ -86,11 +87,11 @@ export class Login {
 
   // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
   showLoginPage() {
-    this.navCtrl.setRoot(Login);
+    this.navController.setRoot(Login);
   }
 
   showTabsPage() {
-    this.navCtrl.setRoot(TabsPage);
+    this.navController.setRoot(TabsPage);
   }
 
   showAlert(alertMessage) {
@@ -107,7 +108,7 @@ export class Login {
   }
 
   ionViewDidLoad() {
-    console.log('Hello Login Page');
+    console.log('--> Login Page - ionViewDidLoad called');
   }
 
 }
