@@ -49,8 +49,6 @@ export class Login {
         console.log('--> handleSuccess called');
         isChallenged = false;
 
-        console.log('--> this: ', this);
-        console.log('--> navController:', navController);
         // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
         navController.setRoot(TabsPage);
     };
