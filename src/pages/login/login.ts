@@ -3,6 +3,8 @@ import { NavController, AlertController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TabsPage } from '../tabs/tabs';
 
+var navController: any;
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
@@ -13,11 +15,10 @@ export class Login {
   securityCheckName = 'LDAPLogin';
   userLoginChallengeHandler;
   statusMsg;
-  navController: any;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
     this.AuthInit();
-    this.navController = navCtrl;
+    navController = navCtrl;
 
     this.form = new FormGroup({
       username: new FormControl("", Validators.required),
@@ -36,7 +37,10 @@ export class Login {
         if (challenge.errorMsg !== null){
             this.statusMsg += "<br/>" + challenge.errorMsg;
         }
+
         // this.showLoginPage();
+        // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
+        navController.setRoot(Login);
     };
 
     this.userLoginChallengeHandler.handleSuccess = function(data) {
@@ -45,7 +49,12 @@ export class Login {
         // document.getElementById('username').value = "";
         // document.getElementById('password').value = "";
         // document.getElementById("helloUser").innerHTML = "Hello, " + data.user.displayName;
-        this.showTabsPage();
+
+        // this.showTabsPage();
+        console.log('--> this: ', this);
+        console.log('--> navController:', navController);
+        // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
+        navController.setRoot(TabsPage);
     };
 
     this.userLoginChallengeHandler.handleFailure = function(error) {
@@ -83,15 +92,6 @@ export class Login {
         );
     }
 
-  }
-
-  // Reference: http://www.joshmorony.com/a-simple-guide-to-navigation-in-ionic-2/
-  showLoginPage() {
-    this.navController.setRoot(Login);
-  }
-
-  showTabsPage() {
-    this.navController.setRoot(TabsPage);
   }
 
   showAlert(alertMessage) {
