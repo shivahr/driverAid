@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
 import { TabsPage } from '../tabs/tabs';
 
 import { AuthHandler } from '../../providers/auth-handler';
@@ -28,7 +29,7 @@ export class Login {
           this.showAlert("Failed to login.");
         }
       }, () => {
-        // navController.setRoot(Login);
+        // this.navCtrl.setRoot(Login);
       });
   }
 
