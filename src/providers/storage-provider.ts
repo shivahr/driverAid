@@ -59,7 +59,6 @@ export class StorageProvider {
     WL.JSONStore.init(this.collections, authData)
     .then(
       (success) => {
-        // this.loadDataFromAdapter();
         WL.JSONStore.get(this.userCredentialsCollectionName).count({}, {})
         .then(
           (countResult) => {
