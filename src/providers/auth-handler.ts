@@ -70,12 +70,13 @@ export class AuthHandler {
   // Reference: https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/authentication-and-security/user-authentication/javascript/
   checkIsLoggedIn() {
     console.log('--> AuthHandler checkIsLoggedIn called');
-    WLAuthorizationManager.obtainAccessToken('UserLogin').then(
-      function (accessToken) {
+    WLAuthorizationManager.obtainAccessToken('UserLogin')
+    .then(
+      (accessToken) => {
         console.log('--> obtainAccessToken onSuccess');
       },
-      function (response) {
-        console.log('--> obtainAccessToken onFailure: ' + JSON.stringify(response));
+      (error) => {
+        console.log('--> obtainAccessToken onFailure: ' + JSON.stringify(error));
       }
     );
   }
@@ -83,13 +84,15 @@ export class AuthHandler {
   login(username, password) {
     console.log('--> AuthHandler login called');
     console.log('--> isChallenged: ', isChallenged);
-    if (isChallenged){
+    if (isChallenged) {
       this.userLoginChallengeHandler.submitChallengeAnswer({'username':username, 'password':password});
     } else {
       WLAuthorizationManager.login(this.securityCheckName, {'username':username, 'password':password})
-        .then((success) => {
+      .then(
+        (success) => {
           console.log('--> login success');
-        }, (failure) => {
+        },
+        (failure) => {
           console.log('--> login failure: ' + JSON.stringify(failure));
         }
       );
@@ -98,12 +101,13 @@ export class AuthHandler {
 
   logout() {
     console.log('--> AuthHandler logout called');
-    WLAuthorizationManager.logout(this.securityCheckName).then(
-      function () {
+    WLAuthorizationManager.logout(this.securityCheckName)
+    .then(
+      (success) => {
         console.log('--> logout success');
       },
-      function (response) {
-        console.log('--> logout failure: ' + JSON.stringify(response));
+      (failure) => {
+        console.log('--> logout failure: ' + JSON.stringify(failure));
       }
     );
   }

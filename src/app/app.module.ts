@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { Login } from '../pages/login/login';
 import { AuthHandler } from '../providers/auth-handler';
+import { StorageProvider } from '../providers/storage-provider';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,6 @@ import { AuthHandler } from '../providers/auth-handler';
     TabsPage,
     Login
   ],
-  providers: [AuthHandler]
+  providers: [AuthHandler, StorageProvider]
 })
 export class AppModule {}

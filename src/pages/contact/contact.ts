@@ -5,8 +5,7 @@ import { StorageProvider } from '../../providers/storage-provider';
 
 @Component({
   selector: 'page-contact',
-  templateUrl: 'contact.html',
-  providers: [StorageProvider]
+  templateUrl: 'contact.html'
 })
 export class ContactPage {
   public people: any;
@@ -17,7 +16,7 @@ export class ContactPage {
 
   loadPeople(){
     this.storage.getEmployees().then(data => {
-      this.people = data; 
+      this.people = data;
     });
   }
 }

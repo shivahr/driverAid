@@ -4,24 +4,82 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class StorageProvider {
+  employeesCollectionName = 'employees';
+  userCredentialsCollectionName = 'userCredentials';
+  collections = {
+    employees: {
+      searchFields: {email: 'string'}
+    },
+    userCredentials: {
+      searchFields: {username: 'string'}
+    }
+  }
 
   constructor() {}
 
-  init() {
-    console.log('--> JSONStore init function called');
+  init(username, password) {
+    console.log('--> JSONStore init called');
 
-    let collections = {
-      employees: {
-        searchFields: {email: 'string'}
-      }
+    let authData = {
+      username: username,
+      password: password,
+      localKeyGen: true
     }
 
-    WL.JSONStore.init(collections).then((success) => {
-      console.log('--> JSONStore init success')
-      this.loadDataFromAdapter();
-    }, (failure) => {
-      console.log('--> JSONStore init failed', failure)
-    })
+    WL.JSONStore.closeAll({});
+    WL.JSONStore.init(this.collections, authData)
+    .then(
+      (success) => {
+        console.log('--> JSONStore init success');
+        WL.JSONStore.get(this.userCredentialsCollectionName).count({}, {})
+        .then(
+          (countResult) => {
+            if (countResult == 0) {
+              // The JSONStore collection is empty, populate it.
+              WL.JSONStore.get(this.userCredentialsCollectionName).add(authData, {});
+              console.log('--> JSONStore collection populated with user-credentials')
+            }
+            this.loadDataFromAdapter();
+          }
+        )
+      }
+    )
+  }
+
+  offlineLogin(username, password, loginSuccessCallback, loginFailureCallback) {
+    console.log('--> offlineLogin called');
+
+    let authData = {
+      username: username,
+      password: password,
+      localKeyGen: true
+    }
+
+    WL.JSONStore.closeAll({});
+    WL.JSONStore.init(this.collections, authData)
+    .then(
+      (success) => {
+        // this.loadDataFromAdapter();
+        WL.JSONStore.get(this.userCredentialsCollectionName).count({}, {})
+        .then(
+          (countResult) => {
+            if (countResult == 0) {
+              // 'First time login must be done when Internet connection is available.'
+              WL.JSONStore.destroy(username);
+              console.log('--> offlineLogin failed - First time login must be done when Internet connection is available')
+              loginFailureCallback({'failure': 'First time login must be done when Internet connection is available'});
+            } else {
+              console.log('--> offlineLogin success')
+              loginSuccessCallback();
+            }
+          }
+        )
+      },
+      (failure) => {
+        console.log('--> offlineLogin failed - invalid username/password ', failure)
+        loginFailureCallback({'failure': 'invalid username/password'});
+      }
+    )
   }
 
   loadDataFromAdapter() {
@@ -39,14 +97,13 @@ export class StorageProvider {
 
   putEmployees(data){
     console.log('--> JSONStore putEmployees function called');
-    let collectionName = 'employees';
     let options = {
       replaceCriteria: ['email'],
       addNew: true,
       markDirty: false
     };
 
-    WL.JSONStore.get(collectionName).change(data, options).then((success) => {
+    WL.JSONStore.get(this.employeesCollectionName).change(data, options).then((success) => {
       console.log('--> JSONStore putEmployees success')
     }, (failure) => {
       console.log('--> JSONStore putEmployees failed', failure)
@@ -57,10 +114,9 @@ export class StorageProvider {
     console.log('--> JSONStore getEmployees function called');
 
     return new Promise( resolve => {
-      let collectionName = 'employees';
       let options = {};
 
-      WL.JSONStore.get(collectionName).findAll(options).then((success) => {
+      WL.JSONStore.get(this.employeesCollectionName).findAll(options).then((success) => {
         console.log('--> JSONStore getEmployees success', success)
         resolve(success);
       }, (failure) => {
