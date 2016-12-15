@@ -25,17 +25,24 @@ export class Login {
 
     this.authHandler.setCallbacks(
       () =>  {
-        this.storage.init(this.username, this.password);
-        this.navCtrl.setRoot(TabsPage);
-      }, (error) => {
+        this.storage.init(this.username, this.password)
+        .then(
+          (success) => {
+            this.navCtrl.setRoot(TabsPage);
+          }
+        );
+      },
+      (error) => {
         if (error.failure !== null) {
           this.showAlert('Login Failure', error.failure);
         } else {
           this.showAlert('Login Failure', "Failed to login.");
         }
-      }, () => {
+      },
+      () => {
         // this.navCtrl.setRoot(Login);
-      });
+      }
+    );
   }
 
   noConnection() {

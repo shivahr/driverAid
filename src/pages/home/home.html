@@ -14,5 +14,15 @@
     Take a look at the <code>src/pages/</code> directory to add or change tabs,
     update any existing page or create new pages.
   </p>
-  <button [navPush]="aboutPage">Go To About</button>
+  <button ion-button [navPush]="aboutPage">Go To About</button>
+
+  <ion-list>
+    <ion-list-header>
+      Schedule of Britney Lee
+    </ion-list-header>
+    <ion-item *ngFor="let s of schedule">
+      <p>{{s.datum}} {{s.start}} to {{s.einde}}</p>
+      <p>Route: {{s.naam}}<p>
+    </ion-item>
+  </ion-list>
 </ion-content>
