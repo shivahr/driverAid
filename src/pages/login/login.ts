@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Network } from 'ionic-native';
+import { Network } from '@ionic-native/network';
 
 import { TabsPage } from '../tabs/tabs';
 
