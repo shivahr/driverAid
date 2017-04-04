@@ -8,6 +8,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { Login } from '../pages/login/login';
 import { AuthHandler } from '../providers/auth-handler';
 import { StorageProvider } from '../providers/storage-provider';
+import { Network } from '@ionic-native/network';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,6 @@ import { StorageProvider } from '../providers/storage-provider';
     TabsPage,
     Login
   ],
-  providers: [AuthHandler, StorageProvider]
+  providers: [AuthHandler, StorageProvider, Network]
 })
 export class AppModule {}
