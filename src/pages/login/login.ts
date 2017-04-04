@@ -17,7 +17,9 @@ export class Login {
   username;
   password;
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, private authHandler: AuthHandler, private storage: StorageProvider) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController,
+    private authHandler: AuthHandler, private storage: StorageProvider,
+    private network: Network) {
     this.form = new FormGroup({
       username: new FormControl("", Validators.required),
       password: new FormControl("", Validators.required)
@@ -46,12 +48,12 @@ export class Login {
   }
 
   noConnection() {
-    return (Network.connection === 'none');
+    return (this.network.type === 'none');
   }
 
   checkNetwork() {
     console.log('--> Login Page - checkNetwork called');
-    this.showAlert('Connection Status', Network.connection);
+    this.showAlert('Connection Status', this.network.type);
   }
 
   processForm() {

@@ -75,7 +75,7 @@
     </mfp:windows>
     <mfp:platformVersion>8.0.0.00-20170218-003050</mfp:platformVersion>
     <mfp:clientCustomInit enabled="false" />
-    <mfp:server runtime="mfp" url="https://mobilefoundation-4h-xt-server.mybluemix.net:443" />
+    <mfp:server runtime="mfp" url="https://mobilefoundation-75-c5-server.mybluemix.net:443" />
     <mfp:directUpdateAuthenticityPublicKey />
     <mfp:languagePreferences>en</mfp:languagePreferences>
 </widget>
